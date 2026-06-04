@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import api from "@/lib/api";
 import TypingEngine from "@/components/TypingEngine";
 import { useAuth } from "@/contexts/AuthContext";
+import { sounds } from "@/lib/sounds";
 import { Zap, Target, Clock, AlertTriangle, RefreshCw, ArrowLeft, Trophy } from "lucide-react";
 import { toast } from "sonner";
 
@@ -45,9 +46,10 @@ export default function TypingPractice() {
       setResult(data);
       refresh();
       if (data.new_achievements?.length) {
+        sounds.achievement();
         toast.success(`Achievement unlocked: ${data.achievements_meta.map(a => a.name).join(", ")}`);
       }
-      if (data.level_up) toast.success(`LEVEL UP — LV.${data.new_level}`);
+      if (data.level_up) { sounds.levelUp(); toast.success(`LEVEL UP — LV.${data.new_level}`); }
     } catch (err) {
       toast.error("Could not save session.");
     }

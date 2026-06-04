@@ -1,12 +1,16 @@
 import React from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { LogOut, Sword, User, Trophy, Flame, BookOpen, Quote, Skull, LayoutDashboard, Menu, X } from "lucide-react";
+import SoundToggle from "@/components/SoundToggle";
+import { LogOut, Sword, Trophy, Flame, BookOpen, Quote, Skull, LayoutDashboard, Menu, X, FileText, Flag, CalendarCheck } from "lucide-react";
 
 const navLinks = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/lessons", label: "Lessons", icon: BookOpen },
   { to: "/quotes", label: "Quotes", icon: Quote },
+  { to: "/daily", label: "Daily", icon: CalendarCheck },
+  { to: "/playground", label: "Playground", icon: FileText },
+  { to: "/race", label: "Race", icon: Flag },
   { to: "/boss", label: "Boss Fight", icon: Skull },
   { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
   { to: "/achievements", label: "Achievements", icon: Flame },
@@ -32,19 +36,19 @@ export default function NavBar() {
         </Link>
 
         {user && (
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden xl:flex items-center gap-1">
             {navLinks.map((l) => (
               <NavLink
                 key={l.to}
                 to={l.to}
                 data-testid={`nav-${l.label.toLowerCase().replace(' ', '-')}`}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 text-xs uppercase tracking-[0.18em] font-heading transition-all ${
+                  `flex items-center gap-1.5 px-2.5 py-2 text-[11px] uppercase tracking-[0.16em] font-heading transition-all ${
                     isActive ? "text-neon-cyan text-glow-cyan" : "text-zinc-400 hover:text-white"
                   }`
                 }
               >
-                <l.icon size={14} />
+                <l.icon size={13} />
                 {l.label}
               </NavLink>
             ))}
@@ -52,6 +56,7 @@ export default function NavBar() {
         )}
 
         <div className="flex items-center gap-3">
+          <SoundToggle />
           {user ? (
             <>
               <Link to="/profile" data-testid="navbar-profile" className="flex items-center gap-2 group">
@@ -64,7 +69,7 @@ export default function NavBar() {
               <button onClick={handleLogout} data-testid="navbar-logout" className="hidden md:flex btn-ghost !px-3 !py-2 text-xs items-center gap-2">
                 <LogOut size={14} /> Exit
               </button>
-              <button onClick={() => setMenuOpen(!menuOpen)} data-testid="navbar-mobile-menu" className="lg:hidden text-white">
+              <button onClick={() => setMenuOpen(!menuOpen)} data-testid="navbar-mobile-menu" className="xl:hidden text-white">
                 {menuOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
             </>
@@ -78,7 +83,7 @@ export default function NavBar() {
       </div>
 
       {user && menuOpen && (
-        <div data-testid="mobile-menu" className="lg:hidden border-t border-white/10 bg-ink-900">
+        <div data-testid="mobile-menu" className="xl:hidden border-t border-white/10 bg-ink-900">
           {navLinks.map((l) => (
             <NavLink
               key={l.to}

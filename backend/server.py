@@ -220,6 +220,10 @@ async def record_session(payload: SessionPayload, user: dict = Depends(get_curre
     xp_gain = int(payload.wpm * (payload.accuracy / 100.0) * (payload.duration_seconds / 60.0) * 10)
     if payload.mode == "boss" and payload.won:
         xp_gain += 200
+    if payload.mode == "daily":
+        xp_gain = int(xp_gain * 2)  # 2x bonus for daily challenge
+    if payload.mode == "race" and payload.won:
+        xp_gain += 100
     xp_gain = max(xp_gain, 5)
 
     # Streak update
@@ -367,6 +371,46 @@ BOSSES = [
     {"id": "boss3", "name": "The Void Sensei", "tier": "advanced", "hp": 2500, "time_limit": 90, "min_wpm": 70, "min_accuracy": 95,
      "text": "Mastery is silence between keystrokes. The Void Sensei does not strike with force — he strikes with inevitability, each motion an unbroken sentence written across the battlefield.",
      "avatar": "https://images.pexels.com/photos/7792276/pexels-photo-7792276.jpeg"},
+    {"id": "boss4", "name": "Master Tengu", "tier": "master", "hp": 3500, "time_limit": 120, "min_wpm": 85, "min_accuracy": 96,
+     "text": "The Tengu's wings carve the sky like calligraphy on parchment. To match him you must type as if every key were a feather settling — light, exact, and never trembling.",
+     "avatar": "https://images.pexels.com/photos/7792276/pexels-photo-7792276.jpeg"},
+    {"id": "boss5", "name": "Demon Lord Akuma", "tier": "legendary", "hp": 5000, "time_limit": 150, "min_wpm": 100, "min_accuracy": 97,
+     "text": "Akuma laughs in the void where mortal typists falter. His domain bends keystroke into katana. To win you must abandon hesitation — let the fingers think, let the mind dissolve into pure motion.",
+     "avatar": "https://images.pexels.com/photos/7792276/pexels-photo-7792276.jpeg"},
+    {"id": "boss6", "name": "Void Empress Reiko", "tier": "mythic", "hp": 7000, "time_limit": 180, "min_wpm": 120, "min_accuracy": 98,
+     "text": "She is the silence between universes, the comma in eternity, the period that ends every sentence ever written. Type without rhythm and she will erase you. Type with rhythm and she will become you — both outcomes are her victory.",
+     "avatar": "https://images.pexels.com/photos/7792276/pexels-photo-7792276.jpeg"},
+]
+
+# Daily challenge passages
+DAILY_PASSAGES = [
+    "Today the dojo turns its focus to you. Type with rhythm; let each key fall like rain on bamboo.",
+    "Before the strike, breath. Before the breath, silence. Before the silence, the discipline to wait for it.",
+    "A swordsman trains with a sword. A typist trains with the world. Every keystroke is a battle won quietly.",
+    "Speed without precision is noise. Precision without speed is hesitation. Today, choose neither — choose both.",
+    "The keyboard does not know who you are. It does not care. It only answers when you ask the right question, the right way.",
+    "In the moment between intent and motion lives the entire art. Train that moment, and the rest follows.",
+    "You are not racing time. You are dancing with it. Trust the rhythm and time will bow to you.",
+    "Every error is a teacher disguised as a mistake. Bow to it, then continue. The dojo demands no apology.",
+    "Mastery is not the absence of mistakes. It is the presence of correction so fast no one sees the mistake.",
+    "Today's quote, tomorrow's reflex. Repetition is the language fingers speak. Let them recite without thinking.",
+    "There are no shortcuts on the keyboard. There are only paths shorter for those who walked them already.",
+    "A sensei was once a beginner who refused to stop. That is the only secret. There is no other.",
+    "Sit. Breathe. Type. The world will wait. It always has. It always will.",
+    "Your keyboard is older than the internet. It remembers every typist who came before you. Type for them too.",
+    "The greatest battles are fought in stillness. Open the passage. Begin. Finish. You have already won.",
+]
+
+RACE_PASSAGES = [
+    "in the heart of the dojo the disciples gather as the morning bell rings clear across the courtyard and the master raises a single hand to begin",
+    "the speed of the wind is matched only by the speed of the will and today the will of every typist sharpens against the whetstone of practice",
+    "a thousand keystrokes a minute is not the goal the goal is one keystroke perfect a thousand times in a row repeated without doubt or fear",
+]
+
+RACE_BOTS = [
+    {"id": "genin", "name": "Genin Bot", "wpm": 35, "color": "#39FF14", "avatar": "https://api.dicebear.com/9.x/adventurer/svg?seed=genin"},
+    {"id": "chunin", "name": "Chunin Bot", "wpm": 55, "color": "#00F0FF", "avatar": "https://api.dicebear.com/9.x/adventurer/svg?seed=chunin"},
+    {"id": "jonin", "name": "Jonin Bot", "wpm": 80, "color": "#FF003C", "avatar": "https://api.dicebear.com/9.x/adventurer/svg?seed=jonin"},
 ]
 
 @api.get("/lessons")
@@ -401,6 +445,39 @@ async def get_boss(boss_id: str):
         if b["id"] == boss_id:
             return b
     raise HTTPException(404, "Boss not found")
+
+# ---------------- Daily Challenge ----------------
+@api.get("/daily")
+async def daily():
+    today = datetime.now(timezone.utc).date()
+    idx = today.toordinal() % len(DAILY_PASSAGES)
+    return {
+        "date": today.isoformat(),
+        "passage": DAILY_PASSAGES[idx],
+        "xp_multiplier": 2.0,
+        "title": f"Daily Trial · {today.strftime('%b %d')}",
+    }
+
+@api.get("/daily/status")
+async def daily_status(user: dict = Depends(get_current_user)):
+    today = datetime.now(timezone.utc).date().isoformat()
+    completed = await db.sessions.find_one({
+        "user_id": user["id"],
+        "mode": "daily",
+        "item_id": today,
+    })
+    return {"completed_today": completed is not None, "date": today}
+
+# ---------------- Race Mode ----------------
+@api.get("/race")
+async def race_setup():
+    # Pick a deterministic passage per session start (random across requests is fine, but let's rotate by day)
+    today_ord = datetime.now(timezone.utc).date().toordinal()
+    passage = RACE_PASSAGES[today_ord % len(RACE_PASSAGES)]
+    return {
+        "passage": passage,
+        "bots": RACE_BOTS,
+    }
 
 @api.get("/")
 async def root():

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import api from "@/lib/api";
 import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
-import { Zap, Flame, Trophy, Target, BookOpen, Quote as QuoteIcon, Skull, ArrowRight } from "lucide-react";
+import { Zap, Flame, Trophy, Target, BookOpen, Quote as QuoteIcon, Skull, ArrowRight, CalendarCheck, FileText, Flag } from "lucide-react";
 
 const xpForLevel = (lvl) => 100 * lvl * lvl;
 
@@ -11,12 +11,20 @@ export default function Dashboard() {
   const { user, refresh } = useAuth();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [daily, setDaily] = useState(null);
+  const [dailyStatus, setDailyStatus] = useState(null);
 
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await api.get("/stats/me");
-        setStats(data);
+        const [statsRes, dailyRes, dailyStatusRes] = await Promise.all([
+          api.get("/stats/me"),
+          api.get("/daily"),
+          api.get("/daily/status"),
+        ]);
+        setStats(statsRes.data);
+        setDaily(dailyRes.data);
+        setDailyStatus(dailyStatusRes.data);
         refresh();
       } catch (err) {
         console.error("Failed to load dashboard stats:", err.message);
@@ -106,9 +114,22 @@ export default function Dashboard() {
         </div>
 
         <div className="space-y-4">
+          {daily && (
+            <Link to="/daily" data-testid="dashboard-daily-tile" className="dojo-card block border-neon-orange/40 hover:border-neon-orange transition group" style={{ boxShadow: "0 0 18px rgba(255,94,0,0.15)" }}>
+              <div className="flex items-center justify-between mb-2">
+                <span className="label-xs text-neon-orange flex items-center gap-1.5"><CalendarCheck size={12}/> Daily Challenge</span>
+                {dailyStatus?.completed_today && <span className="text-[10px] text-neon-green tracking-widest">✓ DONE</span>}
+              </div>
+              <div className="font-display text-xl tracking-wide uppercase mb-1">{daily.title}</div>
+              <div className="text-xs text-zinc-400 font-body line-clamp-2">"{daily.passage}"</div>
+              <div className="mt-3 flex items-center gap-1 text-xs text-neon-orange font-mono">2× XP <ArrowRight size={12}/></div>
+            </Link>
+          )}
           <QuickLink to="/lessons" icon={BookOpen} title="Lessons" desc="12 tiered trials" testid="quick-lessons" />
           <QuickLink to="/quotes" icon={QuoteIcon} title="Anime Quotes" desc="Type iconic lines" testid="quick-quotes" />
-          <QuickLink to="/boss" icon={Skull} title="Boss Fight" desc="Defeat the void" testid="quick-boss" />
+          <QuickLink to="/playground" icon={FileText} title="Playground" desc="Your own text" testid="quick-playground" />
+          <QuickLink to="/race" icon={Flag} title="Race Mode" desc="vs 3 bots" testid="quick-race" />
+          <QuickLink to="/boss" icon={Skull} title="Boss Fight" desc="6 bosses" testid="quick-boss" />
         </div>
       </div>
     </div>

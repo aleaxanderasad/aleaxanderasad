@@ -4,6 +4,7 @@ import api from "@/lib/api";
 import TypingEngine from "@/components/TypingEngine";
 import { useAuth } from "@/contexts/AuthContext";
 import { Skull, Zap, Target, Heart, ArrowLeft, RefreshCw, Trophy } from "lucide-react";
+import { sounds } from "@/lib/sounds";
 import { toast } from "sonner";
 
 export default function BossFight() {
@@ -48,6 +49,7 @@ export default function BossFight() {
   const startFight = () => {
     if (!boss) return;
     setActive(true);
+    sounds.bossEngage();
     timerRef.current = setInterval(() => {
       setTimeLeft((t) => {
         if (t <= 1) {
@@ -76,8 +78,10 @@ export default function BossFight() {
       });
       setFinished({ won, finalStats, result: data });
       refresh();
-      if (won) toast.success(`${boss.name} DEFEATED`);
-      else toast.error(`${boss.name} survived. Try again.`);
+      if (won) { sounds.bossDefeat(); toast.success(`${boss.name} DEFEATED`); }
+      else { sounds.defeat(); toast.error(`${boss.name} survived. Try again.`); }
+      if (data.level_up) { sounds.levelUp(); toast.success(`LEVEL UP — LV.${data.new_level}`); }
+      if (data.new_achievements?.length) { sounds.achievement(); }
     } catch {
       setFinished({ won, finalStats, result: null });
     }

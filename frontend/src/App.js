@@ -17,6 +17,9 @@ import BossFight from "@/pages/BossFight";
 import Achievements from "@/pages/Achievements";
 import Leaderboard from "@/pages/Leaderboard";
 import Profile from "@/pages/Profile";
+import Playground from "@/pages/Playground";
+import DailyChallenge from "@/pages/DailyChallenge";
+import RaceMode from "@/pages/RaceMode";
 
 function Shell({ children }) {
   return (
@@ -44,6 +47,9 @@ function Routing() {
       <Route path="/practice/:mode/:id" element={<ProtectedRoute><Shell><TypingPractice /></Shell></ProtectedRoute>} />
       <Route path="/boss" element={<ProtectedRoute><Shell><BossFight /></Shell></ProtectedRoute>} />
       <Route path="/boss/:id" element={<ProtectedRoute><Shell><BossFight /></Shell></ProtectedRoute>} />
+      <Route path="/playground" element={<ProtectedRoute><Shell><Playground /></Shell></ProtectedRoute>} />
+      <Route path="/daily" element={<ProtectedRoute><Shell><DailyChallenge /></Shell></ProtectedRoute>} />
+      <Route path="/race" element={<ProtectedRoute><Shell><RaceMode /></Shell></ProtectedRoute>} />
       <Route path="/achievements" element={<ProtectedRoute><Shell><Achievements /></Shell></ProtectedRoute>} />
       <Route path="/leaderboard" element={<ProtectedRoute><Shell><Leaderboard /></Shell></ProtectedRoute>} />
       <Route path="/profile" element={<ProtectedRoute><Shell><Profile /></Shell></ProtectedRoute>} />

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { sounds } from "@/lib/sounds";
 
 /**
  * TypingEngine — listens to raw keyboard events, tracks correct/incorrect chars,
@@ -79,7 +80,10 @@ export default function TypingEngine({ text, onProgress, onComplete, onError, ac
       setErrors(nextErrors);
       setShake(true);
       setTimeout(() => setShake(false), 220);
+      sounds.keyWrong();
       if (onError) onError();
+    } else {
+      sounds.keyCorrect();
     }
 
     const started = startTime ?? Date.now();
