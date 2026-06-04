@@ -1,0 +1,101 @@
+{
+  "theme": "DARK",
+  "archetype": "7 (Electric & Neon) + 5 (Luxury Textural Depth)",
+  "concept": "Neo-Tokyo Dojo",
+  "domain": "Education / Gaming / Typing Practice",
+  "colors": {
+    "background": {
+      "base": "#0A0A0A",
+      "surface": "#12121A",
+      "surface_glass": "rgba(18, 18, 26, 0.7)"
+    },
+    "text": {
+      "primary": "#FFFFFF",
+      "secondary": "#A1A1AA",
+      "muted": "#52525B"
+    },
+    "accent": {
+      "primary": "#00F0FF",
+      "secondary": "#FF003C",
+      "tertiary": "#FF5E00",
+      "success": "#39FF14",
+      "error": "#FF003C",
+      "ghibli_sage": "#88B08B"
+    }
+  },
+  "typography": {
+    "fonts": {
+      "heading": "Outfit, sans-serif",
+      "display": "Bebas Neue, sans-serif",
+      "body": "Manrope, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "scale": {
+      "h1": "text-5xl sm:text-7xl tracking-tighter uppercase font-display",
+      "h2": "text-3xl sm:text-5xl tracking-tight font-display uppercase",
+      "h3": "text-xl sm:text-2xl tracking-tight font-heading font-semibold",
+      "body": "text-base font-body leading-relaxed text-secondary",
+      "mono": "text-xl sm:text-2xl font-mono tracking-tight text-secondary",
+      "labels": "text-xs tracking-[0.2em] uppercase font-heading text-secondary"
+    }
+  },
+  "layout_and_spacing": {
+    "strategy": "Generous Spacing, Mobile-first, Grid Bento for Dashboards, Center Focus for Typing interface.",
+    "spacing_scale": "p-4, p-6, p-8, p-12, p-16",
+    "grids": "grid-cols-1 md:grid-cols-4 lg:grid-cols-12 gap-6"
+  },
+  "surfaces_and_components": {
+    "header": "Crystal Glassmorphism: backdrop-blur-xl bg-[#12121A]/70 border-b border-white/10. Sticky top-0 z-50.",
+    "cards": "Retro-Futuristic flat dark background with 1px border (border-white/10). Hover: subtle lift (-translate-y-1) and neon glow shadow (shadow-[0_0_15px_rgba(0,240,255,0.1)]). Sharp edges or max rounded-sm.",
+    "buttons": {
+      "primary": "bg-[#00F0FF] text-black font-bold uppercase tracking-wider hover:bg-white hover:shadow-[0_0_15px_rgba(0,240,255,0.6)] transition-all",
+      "secondary": "bg-transparent border border-white/20 text-white hover:border-[#FF003C] hover:text-[#FF003C] transition-all"
+    },
+    "typing_interface": "Neo-brutalist / terminal vibe. Big font sizes, distinct colors for correct (Neon Cyan #00F0FF), incorrect (Plasma Magenta #FF003C), and pending (muted gray #52525B) characters. Blinking terminal cursor."
+  },
+  "motion_and_interactions": {
+    "hover_states": "Text color brightens, subtle neon drop-shadows on borders, slight scaling.",
+    "transitions": "transition-all duration-300 ease-out",
+    "typing_feedback": "Instant character color change. Screen shake or red flash overlay on error (Boss mode only)."
+  },
+  "media": {
+    "image_urls": [
+      {
+        "category": "hero_background",
+        "url": "https://images.unsplash.com/photo-1707999464758-0ad86b14290f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njl8MHwxfHNlYXJjaHwyfHxjeWJlcnB1bmslMjBjaXR5JTIwbmVvbiUyMGRhcmt8ZW58MHx8fHwxNzgwNTQzODMwfDA&ixlib=rb-4.1.0&q=85",
+        "description": "Cyberpunk city street at night, neon lights. Used for Landing Hero."
+      },
+      {
+        "category": "dashboard_header",
+        "url": "https://images.unsplash.com/photo-1650502151014-8aef95a211c7?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHw0fHxhbmltZSUyMGxhbmRzY2FwZSUyMHNjZW5lcnklMjBuaWdodHxlbnwwfHx8fDE3ODA1NDM4MzB8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Full moon anime landscape, Ghibli vibes. Used for profile header banner."
+      },
+      {
+        "category": "boss_fight_background",
+        "url": "https://images.pexels.com/photos/7792276/pexels-photo-7792276.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Raiden cosplay, dramatic lighting. Used as Boss character illustration in the background."
+      },
+      {
+        "category": "lesson_thumbnail_1",
+        "url": "https://images.pexels.com/photos/15971283/pexels-photo-15971283.png?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Tranquil Japanese street for standard lesson cards."
+      },
+      {
+        "category": "cyberpunk_accent",
+        "url": "https://images.pexels.com/photos/28122495/pexels-photo-28122495.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Vibrant neon lights alleyway for quotes section."
+      }
+    ]
+  },
+  "icons": "lucide-react",
+  "instructions_to_main_agent": [
+    "Install required dependencies: `lucide-react`, `framer-motion` (for micro-interactions), `recharts` (for dashboard metrics).",
+    "Create a hybrid Dark theme utilizing Tailwind. Configure tailwind.config.js to include the custom colors (e.g., 'neon-cyan': '#00F0FF') and import Google fonts (Outfit, Bebas Neue, Manrope, JetBrains Mono).",
+    "Ensure the typing interface relies heavily on JetBrains Mono, clearly differentiating right/wrong/upcoming characters. Avoid standard form inputs for the typing logic; listen to raw keyboard events.",
+    "Boss Mode must include a visible HP bar that depletes based on WPM and Accuracy over a set duration or passage length.",
+    "All interactive and key informational elements MUST include a `data-testid` attribute (e.g., `data-testid=\"typing-input-area\"`).",
+    "Do not use generic UI cards. Implement custom sharp or slightly rounded divs with 1px border and hover glows, following the 'Retro-Futuristic' surface rules.",
+    "Ensure proper spacing between sections. The hero should feel cinematic with the overlaid cyberpunk image.",
+    "Do not invent new pages outside of the scope. Stick to Landing, Auth, Dashboard, Lessons, Quotes, Typing Practice, Boss Fight, Achievements, Leaderboard, Profile."
+  ]
+}
