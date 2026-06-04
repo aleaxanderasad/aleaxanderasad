@@ -43,6 +43,15 @@
 - ✅ Backend session recording w/ XP, level, streak, achievement evaluation
 - ✅ 100% backend tests (21/21) + frontend e2e flows verified
 
+## Phase 2 (2026-02-04)
+- ✅ **Custom Playground** (`/playground`) — paste-your-own-text typing with XP rewards
+- ✅ **Daily Challenge** (`/daily`) — rotating deterministic passage with **2× XP** + dashboard tile
+- ✅ **Race Mode** (`/race`) — race vs 3 bots (Genin 35 / Chunin 55 / Jonin 80 WPM) with animated tracks + countdown + placement ranking, +100 XP bonus for win
+- ✅ **Sound Effects** — Web Audio synth (keystroke clicks, error buzz, level-up chime, boss roar, victory/defeat fanfare) with global mute toggle in nav (persisted in localStorage)
+- ✅ **3 More Boss Tiers** — Master Tengu, Demon Lord Akuma, Void Empress Reiko (total: 6 bosses)
+- ✅ Stricter `mode` validation (Pydantic Literal); navbar layout polish
+- ✅ 100% backend tests (28/28) + frontend Phase 2 flows verified
+
 ## Prioritized Backlog
 - **P1:** Brute-force lockout on /api/auth/login (5 failed attempts = 15 min lockout)
 - **P1:** Custom typing playgrounds (paste own text)

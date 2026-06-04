@@ -10,7 +10,7 @@ import logging
 import bcrypt
 import jwt
 from datetime import datetime, timezone, timedelta
-from typing import List, Optional
+from typing import List, Optional, Literal
 
 from fastapi import FastAPI, APIRouter, HTTPException, Request, Response, Depends
 from starlette.middleware.cors import CORSMiddleware
@@ -51,7 +51,7 @@ class UserOut(BaseModel):
     role: str
 
 class SessionPayload(BaseModel):
-    mode: str  # "lesson" | "quote" | "boss"
+    mode: Literal["lesson", "quote", "boss", "daily", "race", "custom"]
     item_id: Optional[str] = None
     item_title: Optional[str] = None
     wpm: float
@@ -59,7 +59,7 @@ class SessionPayload(BaseModel):
     duration_seconds: float
     characters_typed: int
     errors: int
-    won: Optional[bool] = None  # boss mode only
+    won: Optional[bool] = None  # boss / race only
 
 # ---------------- Helpers ----------------
 def hash_password(password: str) -> str:
@@ -208,7 +208,7 @@ def evaluate_achievements(user: dict, session: SessionPayload) -> List[str]:
     if session.wpm >= 60: add("wpm_60")
     if session.wpm >= 90: add("wpm_90")
     if session.accuracy >= 98: add("accuracy_98")
-    if user.get("streak", 0) + 1 >= 3 or user.get("streak", 0) >= 3: add("streak_3")
+    if user.get("streak", 0) + 1 >= 3: add("streak_3")
     if session.mode == "boss" and session.won: add("boss_slayer")
     if user.get("total_sessions", 0) + 1 >= 10: add("sessions_10")
     user["achievements"] = list(earned)

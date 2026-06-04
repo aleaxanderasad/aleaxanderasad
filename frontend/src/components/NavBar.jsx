@@ -11,7 +11,7 @@ const navLinks = [
   { to: "/daily", label: "Daily", icon: CalendarCheck },
   { to: "/playground", label: "Playground", icon: FileText },
   { to: "/race", label: "Race", icon: Flag },
-  { to: "/boss", label: "Boss Fight", icon: Skull },
+  { to: "/boss", label: "Boss", icon: Skull },
   { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
   { to: "/achievements", label: "Achievements", icon: Flame },
 ];
@@ -61,7 +61,7 @@ export default function NavBar() {
             <>
               <Link to="/profile" data-testid="navbar-profile" className="flex items-center gap-2 group">
                 <img src={user.avatar} alt={user.name} className="w-9 h-9 border border-white/15 group-hover:border-neon-cyan transition" />
-                <div className="hidden md:block text-right">
+                <div className="hidden 2xl:block text-right">
                   <div className="text-xs font-mono text-neon-cyan">LV.{user.level}</div>
                   <div className="text-[10px] tracking-widest uppercase text-zinc-400">{user.name}</div>
                 </div>
